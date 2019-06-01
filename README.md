@@ -15,3 +15,10 @@
     ```
 
 #### ShowCases
+1. Revit sample: rac_basic_sample_project.rvt
+- display model on Cesium
+![image](https://github.com/XinJack/ifc2xml/blob/master/pics/cesium.png?raw=false)
+- properties
+![image](https://github.com/XinJack/ifc2xml/blob/master/pics/properties.png?raw=false)
+- geometries
+![image](https://github.com/XinJack/ifc2xml/blob/master/pics/geometries.png?raw=false)
