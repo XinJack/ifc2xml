@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Xbim.CobieExpress</name>
+    </assembly>
+    <members>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieApprovalType">
+            <summary>
+            Readonly interface for CobieApprovalType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieAreaUnit">
+            <summary>
+            Readonly interface for CobieAreaUnit
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieAsset">
+            <summary>
+            Readonly interface for CobieAsset
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieAssetType">
+            <summary>
+            Readonly interface for CobieAssetType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieAttribute">
+            <summary>
+            Readonly interface for CobieAttribute
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieCategory">
+            <summary>
+            Readonly interface for CobieCategory
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieClassification">
+            <summary>
+            Readonly interface for CobieClassification
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieComponent">
+            <summary>
+            Readonly interface for CobieComponent
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieConnection">
+            <summary>
+            Readonly interface for CobieConnection
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieConnectionType">
+            <summary>
+            Readonly interface for CobieConnectionType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieContact">
+            <summary>
+            Readonly interface for CobieContact
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieCoordinate">
+            <summary>
+            Readonly interface for CobieCoordinate
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieCreatedInfo">
+            <summary>
+            Readonly interface for CobieCreatedInfo
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieCurrencyUnit">
+            <summary>
+            Readonly interface for CobieCurrencyUnit
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieDocument">
+            <summary>
+            Readonly interface for CobieDocument
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieDocumentType">
+            <summary>
+            Readonly interface for CobieDocumentType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieDurationUnit">
+            <summary>
+            Readonly interface for CobieDurationUnit
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieExternalObject">
+            <summary>
+            Readonly interface for CobieExternalObject
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieExternalSystem">
+            <summary>
+            Readonly interface for CobieExternalSystem
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieFacility">
+            <summary>
+            Readonly interface for CobieFacility
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieFloor">
+            <summary>
+            Readonly interface for CobieFloor
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieImpact">
+            <summary>
+            Readonly interface for CobieImpact
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieImpactStage">
+            <summary>
+            Readonly interface for CobieImpactStage
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieImpactType">
+            <summary>
+            Readonly interface for CobieImpactType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieImpactUnit">
+            <summary>
+            Readonly interface for CobieImpactUnit
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieIssue">
+            <summary>
+            Readonly interface for CobieIssue
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieIssueChance">
+            <summary>
+            Readonly interface for CobieIssueChance
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieIssueImpact">
+            <summary>
+            Readonly interface for CobieIssueImpact
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieIssueRisk">
+            <summary>
+            Readonly interface for CobieIssueRisk
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieIssueType">
+            <summary>
+            Readonly interface for CobieIssueType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieJob">
+            <summary>
+            Readonly interface for CobieJob
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieJobStatusType">
+            <summary>
+            Readonly interface for CobieJobStatusType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieJobType">
+            <summary>
+            Readonly interface for CobieJobType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieLinearUnit">
+            <summary>
+            Readonly interface for CobieLinearUnit
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobiePhase">
+            <summary>
+            Readonly interface for CobiePhase
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobiePickValue">
+            <summary>
+            Readonly interface for CobiePickValue
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieProject">
+            <summary>
+            Readonly interface for CobieProject
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieReferencedObject">
+            <summary>
+            Readonly interface for CobieReferencedObject
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieResource">
+            <summary>
+            Readonly interface for CobieResource
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieResourceType">
+            <summary>
+            Readonly interface for CobieResourceType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieRole">
+            <summary>
+            Readonly interface for CobieRole
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieSite">
+            <summary>
+            Readonly interface for CobieSite
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieSpace">
+            <summary>
+            Readonly interface for CobieSpace
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieSpare">
+            <summary>
+            Readonly interface for CobieSpare
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieSpareType">
+            <summary>
+            Readonly interface for CobieSpareType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieStageType">
+            <summary>
+            Readonly interface for CobieStageType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieSystem">
+            <summary>
+            Readonly interface for CobieSystem
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieType">
+            <summary>
+            Readonly interface for CobieType
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieTypeOrComponent">
+            <summary>
+            Readonly interface for CobieTypeOrComponent
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieVolumeUnit">
+            <summary>
+            Readonly interface for CobieVolumeUnit
+            </summary>
+        </member>
+        <member name="T:Xbim.CobieExpress.Interfaces.ICobieZone">
+            <summary>
+            Readonly interface for CobieZone
+            </summary>
+        </member>
+        <member name="P:Xbim.CobieExpress.CobieAsset.Item(System.String)">
+            <summary>
+            Gets or sets attribute value from Attributes.
+            </summary>
+            <param name="attributeName">If the name contains '.' separtot first part is interpreted as the name of property set and the second part as the name of attribute.</param>
+            <returns>Attribute value if it exists for specified attribute name (and optionally property set)</returns>
+        </member>
+    </members>
+</doc>
