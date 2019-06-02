@@ -1,17 +1,8 @@
 ﻿using CommandLine;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xbim.Ifc;
-using Xbim.Ifc4.Interfaces;
-using Xbim.Ifc4.Kernel;
-using Xbim.Ifc4.MeasureResource;
-using Xbim.Ifc4.QuantityResource;
 
 namespace ifc2xml
 {
@@ -43,7 +34,7 @@ namespace ifc2xml
                             IfcParser.SaveProperties(propertyPath, ref elemProperties);
                             Logger.Info("Save properties successfully!");
                             string geometryPath = options.IfcFilePath.Substring(0, options.IfcFilePath.Length - 3) + "xml";
-                            IfcParser.SaveGeometries(geometryPath, ref geometries);
+                            IfcParser.SaveGeometries(geometryPath, ref geometries, options.FileSizeLimit * 1048576);
                             Logger.Info("Save geometries successfully!");
                             Logger.Info("Work done!");
                         }

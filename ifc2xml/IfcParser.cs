@@ -1,13 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using Xbim.Common;
 using Xbim.Common.Geometry;
 using Xbim.Common.XbimExtensions;
 using Xbim.Ifc;
@@ -121,13 +117,6 @@ namespace ifc2xml
             }
         }
 
-        private static XbimMatrix3D Translate(XbimMatrix3D matrix, IVector3D translation)
-        {
-            if (translation == null) return matrix;
-            var translationMatrix = XbimMatrix3D.CreateTranslation(translation.X, translation.Y, translation.Z);
-            return XbimMatrix3D.Multiply(matrix, translationMatrix);
-        }
-
         /// <summary>
         /// Help method. Recursively visited elements
         /// </summary>
@@ -212,90 +201,104 @@ namespace ifc2xml
         }
 
         /// <summary>
-        /// Save geometries to xml file(self defined format)
+        /// Save geometries into xml files
         /// </summary>
-        /// <param name="path">xml path</param>
+        /// <param name="path">xml file path</param>
         /// <param name="geometries">geometries</param>
-        public static void SaveGeometries(string path, ref Dictionary<string, GeometryStore> geometries)
+        /// <param name="fileSizeLimit">file size limit for each xml file</param>
+        public static void SaveGeometries(string path, ref Dictionary<string, GeometryStore> geometries, double fileSizeLimit)
         {
-            // create document
-            XmlDocument doc = new XmlDocument();
-            XmlDeclaration xmldec = doc.CreateXmlDeclaration("1.0", "utf-8", "yes");            doc.AppendChild(xmldec);
+            string baseName = path.Substring(0, path.Length - 4);
 
-            // create root element
-            XmlElement rootElement = doc.CreateElement("IfcModel");
+            // xml content holder
+            StringBuilder doc = new StringBuilder();
 
-            foreach(string globalId in geometries.Keys)
+            // name index for each output xml file
+            int nameIndex = 0;
+
+            foreach (string globalId in geometries.Keys)
             {
+                // before processing the next geometry, check whether we should output the current document
+                // reach file size limit. write to file and start a new document
+                if(doc.Length >= fileSizeLimit)
+                {
+                    // add end tag
+                    doc.Append("</IfcModel>");
+
+                    // write to xml file
+                    using (var writer = new StreamWriter(baseName + "_" + nameIndex + ".xml", false, Encoding.UTF8))
+                    {
+                        writer.Write(doc.ToString());
+                    }
+
+                    doc.Clear();
+                    nameIndex++;                 
+                }
+
+                // empty document, add the first two lines
+                if(doc.Length == 0)
+                {
+                    doc.Append("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n")
+                        .Append("<IfcModel>\n");
+                }
+
                 var geometry = geometries[globalId];
 
-                // create element node
-                XmlElement element = doc.CreateElement("Element");
-                // add attribute to element node
-                XmlAttribute elementId = doc.CreateAttribute("ElementId");
-                elementId.Value = geometry.GlobalId;
-                XmlAttribute levelName = doc.CreateAttribute("LevelName");
-                levelName.Value = ""; // currently we don't have level name
-                XmlAttribute name = doc.CreateAttribute("Name");
-                name.Value = geometry.Name;
-                element.Attributes.Append(elementId);
-                element.Attributes.Append(levelName);
-                element.Attributes.Append(name);  
+                // add Element start tag
+                doc.Append(string.Format("\t<Element ElementId=\"{0}\" LevelName=\"\" Name=\"{1}\">\n", geometry.GlobalId, geometry.Name));
                 
                 // an element node can have multiple mesh nodes
                 foreach(var meshStore in geometry.Meshes)
                 {
-                    // create a mesh node
-                    XmlElement mesh = doc.CreateElement("Mesh");
+                    // add mesh start tag, lod0 start tag, uvs tag(empty), uvindexes tag(empty)
+                    doc.Append(string.Format("\t\t<Mesh ElementId=\"{0}\" Color=\"{1}\" Material=\"\">\n", geometry.GlobalId, meshStore.Color))
+                        .Append("\t\t\t<Lod0>\n")
+                        .Append("\t\t\t\t<UVs />\n")
+                        .Append("\t\t\t\t<UVIndexes />\n");
 
-                    // add attribute to mesh node
-                    XmlAttribute meshId = doc.CreateAttribute("ElementId");
-                    meshId.Value = geometry.GlobalId; // the same as element
-                    XmlAttribute color = doc.CreateAttribute("Color");
-                    color.Value = meshStore.Color;
-                    XmlAttribute material = doc.CreateAttribute("Material");
-                    material.Value = ""; // currently we don't have material    
-
-                    mesh.Attributes.Append(meshId);
-                    mesh.Attributes.Append(color);
-                    mesh.Attributes.Append(material);
-
-                    // lod0
-                    XmlElement lod0 = doc.CreateElement("Lod0");
-                    mesh.AppendChild(lod0);
-
-                    XmlElement uvs = doc.CreateElement("UVs");
-                    lod0.AppendChild(uvs);
-
-                    XmlElement uvIndexes = doc.CreateElement("UVIndexes");
-                    lod0.AppendChild(uvIndexes);
-
-                    XmlElement vertices = doc.CreateElement("Vertices");
-                    StringBuilder sb = new StringBuilder();
+                    // add vertices tag
+                    doc.Append("\t\t\t\t<Vertices>");
                     foreach(var vertex in meshStore.Vertexes)
                     {
-                        sb.Append(vertex).Append(",");
+                        doc.Append(vertex).Append(",");
                     }
-                    vertices.InnerText = sb.Remove(sb.Length - 1, 1).ToString();
-                    lod0.AppendChild(vertices);
+                    doc.Remove(doc.Length - 1, 1) // remove the last ","
+                        .Append("</Vertices>\n");
 
-                    sb.Clear();
-                    XmlElement indexes = doc.CreateElement("PointIndexes");
+                    // add pointindexes tag
+                    doc.Append("\t\t\t\t<PointIndexes>");
                     foreach(var index in meshStore.Indexes)
                     {
-                        sb.Append(index).Append(",");
+                        doc.Append(index).Append(",");
                     }
-                    indexes.InnerText = sb.Remove(sb.Length - 1, 1).ToString();
-                    lod0.AppendChild(indexes);
+                    doc.Remove(doc.Length - 1, 1)
+                         .Append("</PointIndexes>\n");
+
+                    // end lod0 tag
+                    doc.Append("\t\t\t</Lod0>\n");
+
                     // ... can add lod1 lod2 lod3, but currently they are the same so we ignore them
 
-                    element.AppendChild(mesh);
+                    // end this mesh
+                    doc.Append("\t\t</Mesh>\n");
                 }
-                rootElement.AppendChild(element);     
+                // end this geometry
+                doc.Append("\t</Element>\n");     
             }
+            // the last document may not reach the file size limit
+            if(doc.Length != 0)
+            {
+                // add end tag
+                doc.Append("</IfcModel>");
 
-            doc.AppendChild(rootElement);
-            doc.Save(path);           
+                // write to xml file
+                using (var writer = new StreamWriter(baseName + "_" + nameIndex + ".xml", false, Encoding.UTF8))
+                {
+                    writer.Write(doc.ToString());
+                }
+
+                doc.Clear();
+            }     
         }
     }
 }

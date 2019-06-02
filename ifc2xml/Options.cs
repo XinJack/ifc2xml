@@ -1,9 +1,4 @@
 ﻿using CommandLine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ifc2xml
 {
@@ -14,5 +9,8 @@ namespace ifc2xml
     {
         [Option('i', "input", Required =true, HelpText ="The path of ifc file")]
         public string IfcFilePath { get; set; }
+
+        [Option('s', "size", Required =false, Default = 10.0, HelpText ="Maximum size of output xml in MB")]
+        public double FileSizeLimit { get; set; }
     }
 }

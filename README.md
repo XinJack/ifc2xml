@@ -11,7 +11,7 @@
 #### Usage
     It's very simple!
     ```
-    ifc2xml.exe -i "ifc_file_path"
+    ifc2xml.exe -i "ifc_file_path" [-s file_size_in_mb]
     ```
 
 #### ShowCases
@@ -27,4 +27,5 @@
 ![image](https://github.com/XinJack/ifc2xml/blob/master/pics/geometries.png?raw=false)
 
 #### TODO
-1. Limit the size of output xml files => for better performance
+- [x] Limit the size of output xml files => for better performance
+- [ ] Order the output geometry in xml so that each geometry in a xml file is from the same region. For better tiling to generate 3d tile.
