@@ -28,4 +28,5 @@
 
 #### TODO
 - [x] Limit the size of output xml files => for better performance
+- [ ] Decimate mesh when the amount of triangles is too large
 - [ ] Order the output geometry in xml so that each geometry in a xml file is from the same region. For better tiling to generate 3d tile.
