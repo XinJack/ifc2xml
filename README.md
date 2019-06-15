@@ -15,10 +15,13 @@
     ```
 
 #### ShowCases
-1. 20181220Holter_Tower_10.ifc(67MB -> 8.48MB single tile)
+1. 20181220Holter_Tower_10.ifc(169MB -> max size of single tile is 2.03MB)
+- display model on Cesium
+![image](https://github.com/XinJack/ifc2xml/blob/master/pics/mesh-decimation.png?raw=false)
+2. 20181220Holter_Tower_10.ifc(67MB -> 8.48MB single tile)
 - display model on Cesium
 ![image](https://github.com/XinJack/ifc2xml/blob/master/pics/ConferenceCenter.png?raw=false)
-2. Revit sample: rac_basic_sample_project.rvt
+3. Revit sample: rac_basic_sample_project.rvt
 - display model on Cesium
 ![image](https://github.com/XinJack/ifc2xml/blob/master/pics/cesium.png?raw=false)
 - properties

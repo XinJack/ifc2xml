@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using MeshDecimator.Math;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -25,8 +26,12 @@ namespace ifc2xml
                 }
                 else
                 {
-                        try
-                        {
+                        //try
+                        //{
+                            // restrict options
+                            int threshold = Math.Abs(options.Threshold);
+                            double quality = MathHelper.Clamp01(options.Quality);
+
                             LinkedList<NameValueCollection> elemProperties = new LinkedList<NameValueCollection>();
                             Dictionary<string, GeometryStore> geometries = new Dictionary<string, GeometryStore>();
                             IfcParser.ParseIfcFile(options.IfcFilePath, ref elemProperties, ref geometries);
@@ -34,14 +39,14 @@ namespace ifc2xml
                             IfcParser.SaveProperties(propertyPath, ref elemProperties);
                             Logger.Info("Save properties successfully!");
                             string geometryPath = options.IfcFilePath.Substring(0, options.IfcFilePath.Length - 3) + "xml";
-                            IfcParser.SaveGeometries(geometryPath, ref geometries, options.FileSizeLimit * 1048576);
+                            IfcParser.SaveGeometries(geometryPath, ref geometries, options.FileSizeLimit * 1048576, threshold, quality);
                             Logger.Info("Save geometries successfully!");
                             Logger.Info("Work done!");
-                        }
-                        catch (Exception why)
-                        {
-                            Logger.Error(why.Message);
-                        }
+                        //}
+                        //catch (Exception why)
+                        //{
+                        //    Logger.Error(why.Message);
+                        //}
                         
                     }
                 });
