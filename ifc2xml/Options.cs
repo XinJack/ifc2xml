@@ -7,6 +7,12 @@ namespace ifc2xml
     /// </summary>
     class Options
     {
+        [Option('g', "outputGeometry", Required =false, HelpText ="Ouput geometry data")]
+        public bool OutputGeometry { get; set; }
+
+        [Option('p', "outputProperty", Required =false, HelpText ="Output property data")]
+        public bool OutputProperty { get; set; }
+
         [Option('i', "input", Required =true, HelpText ="The path of ifc file")]
         public string IfcFilePath { get; set; }
 

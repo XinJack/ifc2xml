@@ -42,7 +42,10 @@ namespace ifc2xml
         /// <param name="args"></param>
         public static void Info(string format, params object[] args)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[INFO] " + format, args);
+            Console.ResetColor();
+
         }
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using Xbim.Ifc;
 
 namespace ifc2xml
 {
@@ -26,28 +27,52 @@ namespace ifc2xml
                 }
                 else
                 {
-                        //try
-                        //{
+                        // default to output geometries
+                        if(!options.OutputGeometry && !options.OutputProperty)
+                        {
+                            options.OutputGeometry = true;
+                        }
+
+                        try
+                        {
                             // restrict options
                             int threshold = Math.Abs(options.Threshold);
                             double quality = MathHelper.Clamp01(options.Quality);
 
-                            LinkedList<NameValueCollection> elemProperties = new LinkedList<NameValueCollection>();
-                            Dictionary<string, GeometryStore> geometries = new Dictionary<string, GeometryStore>();
-                            IfcParser.ParseIfcFile(options.IfcFilePath, ref elemProperties, ref geometries);
-                            string propertyPath = options.IfcFilePath.Substring(0, options.IfcFilePath.Length - 3) + "json";
-                            IfcParser.SaveProperties(propertyPath, ref elemProperties);
-                            Logger.Info("Save properties successfully!");
-                            string geometryPath = options.IfcFilePath.Substring(0, options.IfcFilePath.Length - 3) + "xml";
-                            IfcParser.SaveGeometries(geometryPath, ref geometries, options.FileSizeLimit * 1048576, threshold, quality);
-                            Logger.Info("Save geometries successfully!");
+                            using (var model = IfcStore.Open(options.IfcFilePath))
+                            {
+                                // output properties
+                                if (options.OutputProperty)
+                                {
+                                    Logger.Info("Start to extract properties...");
+
+                                    LinkedList<NameValueCollection> elemProperties = new LinkedList<NameValueCollection>();
+                                    IfcParser.ExtractProperties(model, ref elemProperties);
+
+                                    string propertyPath = options.IfcFilePath.Substring(0, options.IfcFilePath.Length - 3) + "json";
+                                    IfcParser.SaveProperties(propertyPath, ref elemProperties);
+                                    Logger.Info("Save properties successfully!");
+                                }
+                                if (options.OutputGeometry)
+                                {
+                                    Logger.Info("Start to extract geometries...");
+
+                                    Dictionary<string, GeometryStore> geometries = new Dictionary<string, GeometryStore>();
+                                    IfcParser.ExtractGeometries(model, ref geometries);
+
+                                    string geometryPath = options.IfcFilePath.Substring(0, options.IfcFilePath.Length - 3) + "xml";
+                                    IfcParser.SaveGeometries(geometryPath, ref geometries, options.FileSizeLimit * 1048576, threshold, quality);
+                                    Logger.Info("Save geometries successfully!");
+                                }
+
+                            }
                             Logger.Info("Work done!");
-                        //}
-                        //catch (Exception why)
-                        //{
-                        //    Logger.Error(why.Message);
-                        //}
-                        
+                        }
+                        catch (Exception why)
+                        {
+                            Logger.Error(why.Message);
+                        }
+
                     }
                 });
 

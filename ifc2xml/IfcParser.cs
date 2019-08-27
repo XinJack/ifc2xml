@@ -16,106 +16,110 @@ namespace ifc2xml
     class IfcParser
     {
         /// <summary>
-        /// Method for parsing ifc file to extract properties and geometries
+        /// Extract Geometries from IFC file.
         /// </summary>
-        /// <param name="ifcFilePath">ifc file path</param>
-        /// <param name="elemProperties">properties</param>
-        /// <param name="geometries">geometries</param>
-        public static void ParseIfcFile(string ifcFilePath, ref LinkedList<NameValueCollection> elemProperties, ref Dictionary<string, GeometryStore> geometries)
-        { 
-            // try open ifc file           
-            using (var model = IfcStore.Open(ifcFilePath))
+        /// <param name="model">IfcStore model.</param>
+        /// <param name="geometries">Geometries data.</param>
+        public static void ExtractGeometries(IfcStore model, ref Dictionary<string, GeometryStore> geometries)
+        {
+            // context is used to extract geometry data
+            var context = new Xbim3DModelContext(model);
+            var meter = context.Model.ModelFactors.OneMeter;
+            context.CreateContext();
+
+            // start to extract geometry data
+            var instances = context.ShapeInstances();
+            XbimColourMap colorMap = new XbimColourMap();
+            foreach (var instance in instances) // each instance is a mesh
             {
-                // context is used to extract geometry data
-                var context = new Xbim3DModelContext(model);
-                var meter = context.Model.ModelFactors.OneMeter;
-                context.CreateContext();
+                MeshStore meshStore = new MeshStore();
 
-                // start to extract geometry data
-                var instances = context.ShapeInstances();
-                XbimColourMap colorMap = new XbimColourMap();
-                foreach(var instance in instances) // each instance is a mesh
+                // get the color of this mesh
+                var ss = model.Instances[instance.StyleLabel] as IIfcSurfaceStyle;
+                XbimColour color = XbimColour.DefaultColour;
+                if (ss != null)
                 {
-                    MeshStore meshStore = new MeshStore();
-                    
-                    // get the color of this mesh
-                    var ss = model.Instances[instance.StyleLabel] as IIfcSurfaceStyle;
-                    XbimColour color = XbimColour.DefaultColour;
-                    if(ss != null)
-                    {
-                        var texture = XbimTexture.Create(ss);
-                        color = texture.ColourMap.FirstOrDefault();
-                    }else
-                    {
-                        var styleId = instance.StyleLabel > 0 ? instance.StyleLabel : instance.IfcTypeId;
-                        var theType = model.Metadata.GetType((short)styleId);
-                        color = colorMap[theType.Name];
-                    }
-                    
-                    meshStore.Color = string.Format("{0},{1},{2},{3}", (int)(color.Red * 255), (int)(color.Green * 255), (int)(color.Blue * 255), color.Alpha * 255);
-
-                    var geometry = context.ShapeGeometry(instance);
-                    var data = (geometry as IXbimShapeGeometryData).ShapeData;
-
-                    // multiple geometry may belong to one product, like frame and glass belong to a ifcwindow
-                    var product = model.Instances[instance.IfcProductLabel] as IIfcProduct;
-
-                    if (!geometries.ContainsKey(product.GlobalId))
-                    {
-                        geometries.Add(product.GlobalId, new GeometryStore(product.GlobalId, product.Name));
-                        
-                    }
-                    var geometryStore = geometries[product.GlobalId];
-                    
-                    // reading the real geometry data
-                    using (var stream = new MemoryStream(data))
-                    {
-                        using(var reader = new BinaryReader(stream))
-                        {
-                            // triangle the instance and transform it to the correct position
-                            var mesh = reader.ReadShapeTriangulation();
-                            mesh = mesh.Transform(instance.Transformation);
-
-                            var verticesData = new List<double>();
-                            var normalsData = new List<double>();
-                            var indexesData = new List<int>(); 
-
-                            var faces = mesh.Faces as List<XbimFaceTriangulation>;
-                            foreach(var face in faces)
-                            {
-                                foreach(var indice in face.Indices)
-                                {
-                                    indexesData.Add(indice);
-                                }
-                                foreach(var normal in face.Normals)
-                                {
-                                    normalsData.Add(normal.Normal.X);
-                                    normalsData.Add(normal.Normal.Y);
-                                    normalsData.Add(normal.Normal.Z);
-                                }
-                            }
-                            var vertices = mesh.Vertices as List<XbimPoint3D>;
-                            foreach(var point in vertices)
-                            {
-                                verticesData.Add(point.X / meter); // convert to meter
-                                verticesData.Add(point.Y / meter);
-                                verticesData.Add(point.Z / meter);
-                            }
-
-                            meshStore.Vertexes = verticesData;
-                            meshStore.Normals = normalsData;
-                            meshStore.Indexes = indexesData;                         
-                        }
-                    }
-                    geometryStore.Meshes.Add(meshStore);
+                    var texture = XbimTexture.Create(ss);
+                    color = texture.ColourMap.FirstOrDefault();
+                }
+                else
+                {
+                    var styleId = instance.StyleLabel > 0 ? instance.StyleLabel : instance.IfcTypeId;
+                    var theType = model.Metadata.GetType((short)styleId);
+                    color = colorMap[theType.Name];
                 }
 
-                // ifcproject is the root and normally there is only one in an ifc file
-                var project = model.Instances.FirstOrDefault<IIfcProject>();
+                meshStore.Color = string.Format("{0},{1},{2},{3}", (int)(color.Red * 255), (int)(color.Green * 255), (int)(color.Blue * 255), color.Alpha * 255);
 
-                // process ifc file recursively
-                Process(project, ref elemProperties);
+                var geometry = context.ShapeGeometry(instance);
+                var data = (geometry as IXbimShapeGeometryData).ShapeData;
+
+                // multiple geometry may belong to one product, like frame and glass belong to a ifcwindow
+                var product = model.Instances[instance.IfcProductLabel] as IIfcProduct;
+
+                if (!geometries.ContainsKey(product.GlobalId))
+                {
+                    geometries.Add(product.GlobalId, new GeometryStore(product.GlobalId, product.Name));
+
+                }
+                var geometryStore = geometries[product.GlobalId];
+
+                // reading the real geometry data
+                using (var stream = new MemoryStream(data))
+                {
+                    using (var reader = new BinaryReader(stream))
+                    {
+                        // triangle the instance and transform it to the correct position
+                        var mesh = reader.ReadShapeTriangulation();
+                        mesh = mesh.Transform(instance.Transformation);
+
+                        var verticesData = new List<double>();
+                        var normalsData = new List<double>();
+                        var indexesData = new List<int>();
+
+                        var faces = mesh.Faces as List<XbimFaceTriangulation>;
+                        foreach (var face in faces)
+                        {
+                            foreach (var indice in face.Indices)
+                            {
+                                indexesData.Add(indice);
+                            }
+                            foreach (var normal in face.Normals)
+                            {
+                                normalsData.Add(normal.Normal.X);
+                                normalsData.Add(normal.Normal.Y);
+                                normalsData.Add(normal.Normal.Z);
+                            }
+                        }
+                        var vertices = mesh.Vertices as List<XbimPoint3D>;
+                        foreach (var point in vertices)
+                        {
+                            verticesData.Add(point.X / meter); // convert to meter
+                            verticesData.Add(point.Y / meter);
+                            verticesData.Add(point.Z / meter);
+                        }
+
+                        meshStore.Vertexes = verticesData;
+                        meshStore.Normals = normalsData;
+                        meshStore.Indexes = indexesData;
+                    }
+                }
+                geometryStore.Meshes.Add(meshStore);
             }
+        }
+
+        /// <summary>
+        /// Extract IFC properties.
+        /// </summary>
+        /// <param name="model">IfcStore model.</param>
+        /// <param name="elemProperties">Properties data.</param>
+        public static void ExtractProperties(IfcStore model, ref LinkedList<NameValueCollection> elemProperties)
+        {
+            // ifcproject is the root and normally there is only one in an ifc file
+            var project = model.Instances.FirstOrDefault<IIfcProject>();
+
+            // process ifc file recursively
+            Process(project, ref elemProperties);
         }
 
         /// <summary>
