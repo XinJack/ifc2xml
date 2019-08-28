@@ -20,7 +20,8 @@ namespace ifc2xml
         /// </summary>
         /// <param name="model">IfcStore model.</param>
         /// <param name="geometries">Geometries data.</param>
-        public static void ExtractGeometries(IfcStore model, ref Dictionary<string, GeometryStore> geometries)
+        /// <param name="modelBoundingBox">Bounding box of the ifc model.</param>
+        public static void ExtractGeometries(IfcStore model, ref Dictionary<string, GeometryStore> geometries, ref XbimRect3D modelBoundingBox)
         {
             // context is used to extract geometry data
             var context = new Xbim3DModelContext(model);
@@ -31,7 +32,7 @@ namespace ifc2xml
             var instances = context.ShapeInstances();
             XbimColourMap colorMap = new XbimColourMap();
             foreach (var instance in instances) // each instance is a mesh
-            {
+            {             
                 MeshStore meshStore = new MeshStore();
 
                 // get the color of this mesh
@@ -69,6 +70,12 @@ namespace ifc2xml
                 {
                     using (var reader = new BinaryReader(stream))
                     {
+                        // update boundingbox of current geometryStore
+                        geometryStore.BoundBox = GeometryStore.Union(geometryStore.BoundBox, instance.BoundingBox);
+
+                        // update boundingbox of ifc model
+                        modelBoundingBox = GeometryStore.Union(modelBoundingBox, instance.BoundingBox);
+
                         // triangle the instance and transform it to the correct position
                         var mesh = reader.ReadShapeTriangulation();
                         mesh = mesh.Transform(instance.Transformation);

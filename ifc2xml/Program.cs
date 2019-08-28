@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using Xbim.Common.Geometry;
 using Xbim.Ifc;
 
 namespace ifc2xml
@@ -58,7 +59,8 @@ namespace ifc2xml
                                     Logger.Info("Start to extract geometries...");
 
                                     Dictionary<string, GeometryStore> geometries = new Dictionary<string, GeometryStore>();
-                                    IfcParser.ExtractGeometries(model, ref geometries);
+                                    XbimRect3D modelBoundingBox = XbimRect3D.Empty;
+                                    IfcParser.ExtractGeometries(model, ref geometries, ref modelBoundingBox);
 
                                     string geometryPath = options.IfcFilePath.Substring(0, options.IfcFilePath.Length - 3) + "xml";
                                     IfcParser.SaveGeometries(geometryPath, ref geometries, options.FileSizeLimit * 1048576, threshold, quality);
