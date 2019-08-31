@@ -24,6 +24,9 @@ namespace ifc2xml
         /// <returns>Intersect volume.</returns>
         public static double Intersect(XbimRect3D boxA, XbimRect3D boxB)
         {
+            // bounding boxes do not intersect
+            if (!boxA.Intersects(boxB)) return 0.0;
+
             double lowX = Math.Max(boxA.Min.X, boxB.Min.X), lowY = Math.Max(boxA.Min.Y, boxB.Min.Y), lowZ = Math.Max(boxA.Min.Z, boxB.Min.Z);
             double highX = Math.Min(boxA.Max.X, boxB.Max.X), highY = Math.Min(boxA.Max.Y, boxB.Max.Y), highZ = Math.Min(boxA.Max.Z, boxB.Max.Z);
 
