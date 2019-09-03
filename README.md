@@ -10,8 +10,19 @@
 
 #### Usage
     It's very simple!
+
+    - -i [Required] ifc_file_path
+    - -g [Optional] output geometries
+    - -p [Optional] output properties
+    - -x [Optional] tile size at x direction in meter
+    - -y [Optional] tile size at y direction in meter
+    - -z [Optional] tile size at z direction in meter
+    - -t [Optional] triangle number threshold for decimation
+    - -q [Optional] mesh decimation quality
+    
+    example:
     ```
-    ifc2xml.exe -i "ifc_file_path" [-s file_size_in_mb -t triangle_number_threshold_for_decimation -q mesh_decimation_quality]
+    ifc2xml.exe -i "...\20160124OTC-Conference Center.ifc" -g -x 50 -y 50 -z 50 -q 0.01 -m 2000
     ```
 
 #### ShowCases
@@ -32,4 +43,4 @@
 #### TODO
 - [x] Limit the size of output xml files => for better performance
 - [x] Decimate mesh when the amount of triangles is too large
-- [ ] Order the output geometry in xml so that each geometry in a xml file is from the same region. For better tiling to generate 3d tile.
+- [x] Order the output geometry in xml so that each geometry in a xml file is from the same region. For better tiling to generate 3d tile.
