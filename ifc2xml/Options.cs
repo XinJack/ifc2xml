@@ -16,20 +16,20 @@ namespace ifc2xml
         [Option('i', "input", Required =true, HelpText ="The path of ifc file")]
         public string IfcFilePath { get; set; }
 
-        [Option('x', "tileX", Required =false, Default =100, HelpText ="X size of each tile")]
+        [Option('x', "tileX", Required =false, Default =100, HelpText ="X size of each tile, in meter")]
         public double TileXSize { get; set; }
 
-        [Option('y', "tileY", Required =false, Default =100, HelpText ="Y size of each tile")]
+        [Option('y', "tileY", Required =false, Default =100, HelpText ="Y size of each tile, in meter")]
         public double TileYSize { get; set; }
 
-        [Option('z', "tileZ", Required =false, Default =100, HelpText ="Z size of each tile")]
+        [Option('z', "tileZ", Required =false, Default =100, HelpText ="Z size of each tile, in meter")]
         public double TileZSize { get; set; }
 
         [Option('m', "maxPerTile", Required =false, Default = 100, HelpText ="Maximum number of element in each tile")]
         public int MaxElementPerTile { get; set; }
 
-        [Option('s', "size", Required =false, Default = 10.0, HelpText ="Maximum size of output xml in MB, deprecated for now")]
-        public double FileSizeLimit { get; set; }
+        //[Option('s', "size", Required =false, Default = 10.0, HelpText ="Maximum size of output xml in MB, deprecated for now")]
+        //public double FileSizeLimit { get; set; }
 
         [Option('t', "threshold", Required =false, Default =500, HelpText ="Threshold of triangle count for a mesh to decimate")]
         public int Threshold { get; set; }
